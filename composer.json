@@ -1,0 +1,123 @@
+{
+    "name": "not-empty/ala-microframework-php",
+    "description": "API Rest based in lumen using query builder that auto generate base code for simple crud (with automatic generated 100% unit and feature tests). To be used as a simple and fast way to implement microservices architecture",
+    "keywords": ["php", "laravel", "lumen", "crud", "microframework", "microservices", "code-generation"],
+    "license": "GPL-3.0-only",
+    "version" : "7.0.0",
+    "type": "project",
+    "require": {
+        "php": "^8.3",
+        "intouch/newrelic": "^2.0",
+        "laravel/lumen-framework": "^10.0",
+        "not-empty/jwt-manager-php-lib": "^7.0",
+        "not-empty/request-service-php-lib": "^7.0",
+        "not-empty/response-json-php-lib": "^7.0",
+        "not-empty/ulid-php-lib": "^7.0"
+        
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.23",
+        "mockery/mockery": "^1.6",
+        "phpmd/phpmd": "^2.14",
+        "phpunit/phpunit": "^10.4",
+        "squizlabs/php_codesniffer": "^3.7",
+        "pdepend/pdepend": "2.15.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "./ops/folders.sh"
+        ],
+        "checkall" : [
+            "@lint",
+            "@cs",
+            "@mess",
+            "@test"
+        ],
+        "check" : [
+            "@lint",
+            "@cs",
+            "@mess",
+            "@test-unit"
+        ],
+        "checkallcover" : [
+            "@lint",
+            "@cs",
+            "@mess",
+            "@test-cover",
+            "@ccu",
+            "@ccf"
+        ],
+        "checkcover" : [
+            "@lint",
+            "@cs",
+            "@mess",
+            "@test-unit-cover",
+            "@ccu"
+        ],
+        "lint" : [
+            "find ./app -name '*.php' -print0 | xargs -0 -n1 -P8 php -l -d display_errors=0",
+            "find ./bootstrap -name '*.php' -print0 | xargs -0 -n1 -P8 php -l -d display_errors=0",
+            "find ./config -name '*.php' -print0 | xargs -0 -n1 -P8 php -l -d display_errors=0",
+            "find ./database -name '*.php' -print0 | xargs -0 -n1 -P8 php -l -d display_errors=0",
+            "find ./public -name '*.php' -print0 | xargs -0 -n1 -P8 php -l -d display_errors=0",
+            "find ./resources -name '*.php' -print0 | xargs -0 -n1 -P8 php -l -d display_errors=0",
+            "find ./routes -name '*.php' -print0 | xargs -0 -n1 -P8 php -l -d display_errors=0",
+            "find ./tests -name '*.php' -print0 | xargs -0 -n1 -P8 php -l -d display_errors=0"
+        ],
+        "mess" : [
+            "vendor/bin/phpmd ./app text phpmd.xml",
+            "vendor/bin/phpmd ./bootstrap text phpmd.xml",
+            "vendor/bin/phpmd ./config text phpmd.xml",
+            "vendor/bin/phpmd ./database text phpmd.xml",
+            "vendor/bin/phpmd ./public text phpmd.xml",
+            "vendor/bin/phpmd ./resources text phpmd.xml",
+            "vendor/bin/phpmd ./routes text phpmd.xml"
+        ],
+        "cs" : "vendor/bin/phpcs",
+        "test-unit": [
+            "vendor/bin/phpunit --configuration tests/config/phpunit-unit.xml -d memory_limit=1024M"
+        ],
+        "test-unit-cover": [
+            "vendor/bin/phpunit --configuration tests/config/phpunit-unit-cover.xml --coverage-clover tests/coverage/coverage-unit/coverage.xml --log-junit tests/coverage/junit.xml -d memory_limit=1024M",
+            "sed -i 's+/var/www/html/++g' tests/coverage/coverage-unit/coverage.xml"
+        ],
+        "test-feat": [
+            "vendor/bin/phpunit --configuration tests/config/phpunit-feat.xml -d memory_limit=1024M"
+        ],
+        "test-feat-cover": [
+            "vendor/bin/phpunit --configuration tests/config/phpunit-feat-cover.xml --coverage-clover tests/coverage/coverage-feature/coverage.xml --log-junit tests/coverage/junit.xml -d memory_limit=1024M",
+            "sed -i 's+/var/www/html/++g' tests/coverage/coverage-feature/coverage.xml"
+        ],
+        "test": [
+            "vendor/bin/phpunit --configuration tests/config/phpunit-unit.xml -d memory_limit=1024M",
+            "vendor/bin/phpunit --configuration tests/config/phpunit-feat.xml -d memory_limit=1024M"
+        ],
+        "test-cover": [
+            "vendor/bin/phpunit --configuration tests/config/phpunit-unit-cover.xml --coverage-clover tests/coverage/coverage-unit/coverage.xml --log-junit tests/coverage/junit.xml -d memory_limit=1024M",
+            "sed -i 's+/var/www/html/++g' tests/coverage/coverage-unit/coverage.xml",
+            "vendor/bin/phpunit --configuration tests/config/phpunit-feat-cover.xml --coverage-clover tests/coverage/coverage-feature/coverage.xml --log-junit tests/coverage/junit.xml -d memory_limit=1024M",
+            "sed -i 's+/var/www/html/++g' tests/coverage/coverage-feature/coverage.xml"
+        ],
+        "ccu" : "php ops/contrib/coverage-checker.php tests/coverage/coverage-unit/coverage.xml 100",
+        "ccf" : "php ops/contrib/coverage-checker.php tests/coverage/coverage-feature/coverage.xml 100"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
